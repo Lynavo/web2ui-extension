@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support scope and reporting checklist
+    url: https://github.com/Lynavo/web2ui-extension/blob/main/SUPPORT.md
+    about: Read this before opening a public issue.

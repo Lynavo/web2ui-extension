@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 10.28.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Verify release tag
+        run: |
+          version="$(node --input-type=module -e "import packageJson from './package.json' with { type: 'json' }; process.stdout.write(packageJson.version)")"
+          test "${GITHUB_REF_NAME}" = "v${version}"
+          test "$(node --input-type=module -e "import manifest from './manifest.json' with { type: 'json' }; process.stdout.write(manifest.version)")" = "${version}"
+      - run: pnpm validate
+      - run: pnpm package
+      - uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2
+        with:
+          subject-path: out/releases/*
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${GITHUB_REF_NAME}"
+          out/releases/*
+          --verify-tag
+          --generate-notes
+          --title "Web2UI Extension ${GITHUB_REF_NAME}"

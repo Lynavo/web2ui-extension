@@ -1,0 +1,61 @@
+name: Bug report
+description: Report a reproducible defect in the latest release
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Never attach private captures, credentials, cookies, personal data, or proprietary page
+        content. Use a synthetic fixture whenever possible.
+  - type: input
+    id: version
+    attributes:
+      label: Web2UI version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: chrome
+    attributes:
+      label: Chrome/Chromium version and operating system
+      placeholder: Chrome 140 on macOS 16
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Capture mode
+      options:
+        - Visible Area
+        - Full Page
+        - Copy for Figma
+        - Installation or packaging
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include minimal steps and a redistributable synthetic fixture when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Data safety
+      options:
+        - label: I removed private content, credentials, cookies, and personal data.
+          required: true

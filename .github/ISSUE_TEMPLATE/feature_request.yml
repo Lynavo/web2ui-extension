@@ -1,0 +1,29 @@
+name: Feature request
+description: Propose a scoped improvement to the local-only extension
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the user problem, not only the preferred implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Local-only boundary
+      options:
+        - label: The proposal does not require an account, hosted API, upload, telemetry, or remote executable code.
+          required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
