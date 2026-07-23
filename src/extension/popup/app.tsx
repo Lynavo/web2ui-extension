@@ -290,9 +290,10 @@ function ReadyPanel(props: PopupViewProps) {
       >
         <span className="result-card-icon"><Icon name="copy" size={22} /></span>
         <span className="result-card-body">
-          <span className="result-card-title">{copyLabel}<Icon name="arrow" size={15} /></span>
-          <span className="result-card-desc">Paste directly onto your Figma canvas</span>
+          <span className="result-card-title">{copyLabel}</span>
+          <span className="result-card-desc">Paste onto your Figma canvas</span>
         </span>
+        <span className="result-card-arrow" aria-hidden="true"><Icon name="arrow" size={16} /></span>
       </button>
       <p className={props.copyStatus === "error" ? "result-storage error" : "result-storage"} aria-live="polite">
         {props.copyStatus === "error" ? "Clipboard access failed. Your local result is still ready." : "Stored locally for up to 24 hours."}
