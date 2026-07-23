@@ -36,8 +36,8 @@
     "validate": "pnpm run build && pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run e2e && node scripts/verify-release.mjs dist"
   },
   "dependencies": {
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
