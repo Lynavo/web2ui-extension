@@ -1,0 +1,57 @@
+{
+  "name": "web2ui-extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-only Chrome extension that captures web pages and copies them for Figma.",
+  "license": "AGPL-3.0-only",
+  "author": "Lynavo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lynavo/web2ui-extension.git"
+  },
+  "homepage": "https://github.com/Lynavo/web2ui-extension#readme",
+  "bugs": {
+    "url": "https://github.com/Lynavo/web2ui-extension/issues"
+  },
+  "keywords": [
+    "chrome-extension",
+    "figma",
+    "local-first",
+    "web-capture"
+  ],
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "e2e": "vitest run tests/e2e",
+    "lint": "eslint . --max-warnings=0",
+    "package": "node scripts/package.mjs",
+    "sbom": "node scripts/sbom.mjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs && vitest run --exclude '**/*.test.mjs' --exclude 'tests/e2e/**'",
+    "typecheck": "tsc -p tsconfig.json --noEmit --pretty false",
+    "validate": "pnpm run build && pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run e2e && node scripts/verify-release.mjs dist"
+  },
+  "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/chrome": "^0.0.287",
+    "@types/node": "^26.0.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "esbuild": "^0.28.1",
+    "eslint": "^9.39.4",
+    "fake-indexeddb": "^6.2.4",
+    "playwright": "^1.49.0",
+    "fflate": "^0.8.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.62.1",
+    "vitest": "^3.2.6"
+  }
+}
