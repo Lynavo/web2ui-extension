@@ -23,6 +23,7 @@
   <a href="#product-preview">Product Preview</a> •
   <a href="#install">Install</a> •
   <a href="#open-source-boundaries">OSS Boundaries</a> •
+  <a href="#commercial-edition">Commercial</a> •
   <a href="#architecture">Architecture</a> •
   <a href="#development">Development</a> •
   <a href="#contributing-and-support">Contributing</a>
@@ -114,6 +115,22 @@ feature or reproduce the full semantic model of a native Figma document.
 > - Remotely hosted executable code or runtime dependency on a developer-controlled server.
 > - A Figma plugin runtime, native Figma component semantics, or automatic document insertion.
 > - Chrome Web Store publishing, auto-update infrastructure, or store-submission materials.
+
+## Commercial edition
+
+This repository is the local-first, open-source edition of Web2UI. A hosted commercial edition is
+also available at **[web2ui.lynavo.io](https://web2ui.lynavo.io/)** for people who want a managed,
+end-to-end workflow.
+
+The commercial product extends Web2UI with:
+
+- URL, ZIP/HTML, and Chrome capture entry points;
+- managed conversion jobs, accounts, usage quotas, and capture history;
+- a Figma plugin workflow for importing prepared results;
+- an expanded fidelity path for complex and dynamic pages, backed by managed cloud processing.
+
+The hosted product is separate from this repository. No Web2UI account or commercial service is
+required to install, build, modify, or use the open-source extension.
 
 ## Install
 
