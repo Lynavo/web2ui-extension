@@ -8,9 +8,10 @@ import { unzipSync } from "fflate";
 
 const root = new URL("../", import.meta.url);
 const releaseDir = new URL("out/releases/", root);
-const archive = new URL("web2ui-extension-0.1.0.zip", releaseDir);
-const checksum = new URL("web2ui-extension-0.1.0.zip.sha256", releaseDir);
-const sbom = new URL("web2ui-extension-0.1.0.spdx.json", releaseDir);
+const { version } = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
+const archive = new URL(`web2ui-extension-${version}.zip`, releaseDir);
+const checksum = new URL(`web2ui-extension-${version}.zip.sha256`, releaseDir);
+const sbom = new URL(`web2ui-extension-${version}.spdx.json`, releaseDir);
 
 test("packages a verified Chrome extension ZIP with its AGPL license and checksum", async () => {
   await rm(releaseDir, { recursive: true, force: true });
@@ -25,7 +26,7 @@ test("packages a verified Chrome extension ZIP with its AGPL license and checksu
   const expectedHash = createHash("sha256").update(archiveBytes).digest("hex");
   assert.equal(
     (await readFile(checksum, "utf8")).trim(),
-    `${expectedHash}  web2ui-extension-0.1.0.zip`,
+    `${expectedHash}  web2ui-extension-${version}.zip`,
   );
 
   const entries = unzipSync(new Uint8Array(archiveBytes));
@@ -47,9 +48,11 @@ test("packages a verified Chrome extension ZIP with its AGPL license and checksu
   ]);
   const sourceNotice = new TextDecoder().decode(entries["SOURCE_CODE.txt"]);
   const installGuide = new TextDecoder().decode(entries["INSTALL.md"]);
-  assert.match(sourceNotice, /Web2UI Extension 0\.1\.0/u);
-  assert.match(sourceNotice, /github\.com\/Lynavo\/web2ui-extension\/tree\/v0\.1\.0/iu);
-  assert.match(sourceNotice, /github\.com\/Lynavo\/web2ui-extension\/releases\/tag\/v0\.1\.0/iu);
+  assert.ok(sourceNotice.includes(`Web2UI Extension ${version}`));
+  assert.ok(sourceNotice.includes(`github.com/Lynavo/web2ui-extension/tree/v${version}`));
+  assert.ok(
+    sourceNotice.includes(`github.com/Lynavo/web2ui-extension/releases/tag/v${version}`),
+  );
   assert.match(sourceNotice, /pnpm install --frozen-lockfile/u);
   assert.match(sourceNotice, /pnpm validate/u);
   assert.match(sourceNotice, /pnpm package/u);
@@ -62,7 +65,7 @@ test("packages a verified Chrome extension ZIP with its AGPL license and checksu
   assert.equal(spdx.spdxVersion, "SPDX-2.3");
   assert.equal(
     spdx.documentNamespace,
-    "https://github.com/Lynavo/web2ui-extension/releases/tag/v0.1.0/sbom",
+    `https://github.com/Lynavo/web2ui-extension/releases/tag/v${version}/sbom`,
   );
   assert.deepEqual(
     spdx.packages.map(({ name }) => name).sort(),

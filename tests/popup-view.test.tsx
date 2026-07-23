@@ -21,7 +21,7 @@ function render(state: ExtensionState) {
       theme="browser"
       browserViewportWidth={null}
       copyStatus="idle"
-      version="0.1.0"
+      version="0.1.1"
       {...callbacks}
     />,
   );

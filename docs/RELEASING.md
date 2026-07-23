@@ -37,8 +37,10 @@ The release workflow rejects a tag that does not match the package version.
 Create and push an annotated tag from the reviewed `main` commit:
 
 ```bash
-git tag -a v0.1.0 -m "Web2UI extension v0.1.0"
-git push origin v0.1.0
+version="$(node --input-type=module -e \
+  "import packageJson from './package.json' with { type: 'json' }; process.stdout.write(packageJson.version)")"
+git tag -a "v${version}" -m "Web2UI extension v${version}"
+git push origin "v${version}"
 ```
 
 Replace the example version with the actual version. The tag workflow repeats validation and
@@ -59,7 +61,9 @@ the workflow-built artifacts are the release source of truth.
 4. Verify build provenance:
 
    ```bash
-   gh attestation verify web2ui-extension-0.1.0.zip \
+   version="$(node --input-type=module -e \
+     "import packageJson from './package.json' with { type: 'json' }; process.stdout.write(packageJson.version)")"
+   gh attestation verify "web2ui-extension-${version}.zip" \
      --repo Lynavo/web2ui-extension
    ```
 

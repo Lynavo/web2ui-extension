@@ -4,6 +4,8 @@ All user-visible changes to Web2UI — Copy for Figma are recorded here.
 
 ## Unreleased
 
+## 0.1.1 — 2026-07-23
+
 - Kept captures usable when a page-declared image, SVG, or CSS background cannot be recovered:
   missing image regions use a neutral placeholder, missing paints are omitted, and warnings remain
   attached instead of aborting the entire conversion.
