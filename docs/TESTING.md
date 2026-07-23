@@ -96,4 +96,5 @@ a Web2UI host. The browser profile and screenshots are disposable and must not b
   file alone.
 - **Release-boundary failure:** read the reported file and pattern. Do not relax a rule merely to
   pass; confirm whether the change violates local-only scope, manifest policy, or artifact
-  hygiene.
+  hygiene. The reviewed commercial website link is allowlisted only in its source component and
+  compiled popup; popup network primitives and the same origin elsewhere still fail closed.

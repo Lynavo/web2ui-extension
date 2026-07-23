@@ -2,6 +2,13 @@
 
 All user-visible changes to Web2UI — Copy for Figma are recorded here.
 
+## Unreleased
+
+- Added an optional Web2UI Cloud website link, with contextual suggestions when local capture uses
+  fidelity approximations or fails because the page is too complex for the public profile.
+- Kept the commercial handoff user-initiated and link-only: no capture data, account state, or
+  conversion request is sent by the extension.
+
 ## 0.1.0 — 2026-07-23
 
 - Published the browser-safe capture contracts, DOM extractor, canonical conversion, and clipboard

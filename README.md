@@ -130,7 +130,10 @@ The commercial product extends Web2UI with:
 - an expanded fidelity path for complex and dynamic pages, backed by managed cloud processing.
 
 The hosted product is separate from this repository. No Web2UI account or commercial service is
-required to install, build, modify, or use the open-source extension.
+required to install, build, modify, or use the open-source extension. The extension includes an
+optional website link and may show it beside a local fidelity warning or complexity-related
+failure. Following that link is always a separate user action: the extension does not upload the
+capture, create an account, or send conversion data to the hosted product.
 
 ## Install
 
