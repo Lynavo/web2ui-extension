@@ -5,7 +5,10 @@ import type {
   CaptureWarning,
 } from "../core/contracts/capture.js";
 import type { RenderPlan } from "../core/contracts/render-plan.js";
-import type { StoredRenderPlan } from "./plan-store.js";
+import {
+  RenderPlanTooLargeError,
+  type StoredRenderPlan,
+} from "./plan-store.js";
 import {
   initialExtensionState,
   reduceExtensionState,
@@ -51,6 +54,7 @@ export interface BackgroundPlatform {
   measureViewport(
     tabId: number,
   ): Promise<{ width: number; height: number; deviceScaleFactor: number }>;
+  getCurrentDocumentId(tabId: number): Promise<string | null>;
   attachDebugger(tabId: number): Promise<void>;
   sendDebuggerCommand(
     tabId: number,
@@ -292,6 +296,26 @@ export class BackgroundController {
     );
   }
 
+  async failIfCaptureDocumentChanged(tabId: number): Promise<void> {
+    const identity = this.#session?.identity;
+    if (!identity || identity.tabId !== tabId) return;
+
+    const documentId = await this.#platform
+      .getCurrentDocumentId(tabId)
+      .catch(() => null);
+    const currentIdentity = this.#session?.identity;
+    if (
+      !currentIdentity ||
+      currentIdentity.runId !== identity.runId ||
+      currentIdentity.tabId !== identity.tabId ||
+      currentIdentity.documentId !== identity.documentId
+    ) {
+      return;
+    }
+    if (documentId === identity.documentId) return;
+    await this.failForPageChange(tabId, false);
+  }
+
   getActiveTabId(): number | null {
     return this.#session?.tabId ?? null;
   }
@@ -305,8 +329,18 @@ export class BackgroundController {
       reduceExtensionState(this.#state, { type: "capture-complete", identity }),
     );
 
+    let plan: RenderPlan;
     try {
-      const plan = this.#convert(document);
+      plan = this.#convert(document);
+    } catch {
+      await this.#failSession(
+        "conversion-failed",
+        "A page structure could not be converted locally.",
+      );
+      return;
+    }
+
+    try {
       const stored = await this.#store.put(plan, {
         ...identity,
         mode: this.#session?.mode ?? "visible-area",
@@ -330,10 +364,17 @@ export class BackgroundController {
       );
       await this.#cleanupDebugger();
     } catch (error) {
-      const code = error instanceof Error && error.name === "RenderPlanTooLargeError"
-        ? "plan-too-large"
-        : "conversion-failed";
-      await this.#failSession(code, "The page was too complex to convert locally.");
+      if (error instanceof RenderPlanTooLargeError) {
+        await this.#failSession(
+          "plan-too-large",
+          `The converted result is ${formatMegabytes(error.actualBytes)}, above the ${formatMegabytes(error.maxBytes)} local limit.`,
+        );
+        return;
+      }
+      await this.#failSession(
+        "storage-failed",
+        "Chrome could not save the converted result locally.",
+      );
     }
   }
 
@@ -386,4 +427,8 @@ function isHttpUrl(value: string): boolean {
   } catch {
     return false;
   }
+}
+
+function formatMegabytes(bytes: number): string {
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }

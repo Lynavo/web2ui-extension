@@ -4,6 +4,13 @@ All user-visible changes to Web2UI — Copy for Figma are recorded here.
 
 ## Unreleased
 
+- Kept captures usable when a page-declared image, SVG, or CSS background cannot be recovered:
+  missing image regions use a neutral placeholder, missing paints are omitted, and warnings remain
+  attached instead of aborting the entire conversion.
+- Replaced the generic “page was too complex” failure with distinct conversion, measured 25 MiB
+  result-limit, and Chrome local-storage messages.
+- Fixed false “The page changed during capture” failures on pages that update browser history while
+  Full Page capture scrolls, while still stopping when the top-level document is actually replaced.
 - Added an optional Web2UI Cloud website link, with contextual suggestions when local capture uses
   fidelity approximations or fails because the page is too complex for the public profile.
 - Kept the commercial handoff user-initiated and link-only: no capture data, account state, or

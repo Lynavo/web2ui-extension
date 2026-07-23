@@ -28,6 +28,14 @@ const platform: BackgroundPlatform = {
     if (!result?.result) throw new Error("Could not measure the active page");
     return result.result;
   },
+  getCurrentDocumentId: async (tabId) => {
+    const results = await chrome.scripting.executeScript({
+      target: { tabId },
+      world: "ISOLATED",
+      func: () => undefined,
+    });
+    return results.find((result) => result.frameId === 0)?.documentId ?? null;
+  },
   attachDebugger: async (tabId) => {
     await chrome.debugger.attach({ tabId }, "1.3");
   },
@@ -142,7 +150,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.status === "loading" || changeInfo.url !== undefined) {
-    void controller.failForPageChange(tabId, false);
+    void controller.failIfCaptureDocumentChanged(tabId);
   }
 });
 

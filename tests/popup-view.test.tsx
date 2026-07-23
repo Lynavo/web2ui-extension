@@ -124,7 +124,7 @@ describe("PopupView", () => {
     const complexMarkup = render({
       status: "error",
       code: "plan-too-large",
-      message: "The page was too complex to convert locally.",
+      message: "The converted result is 28.0 MB, above the 25.0 MB local limit.",
     });
     const permissionMarkup = render({
       status: "error",

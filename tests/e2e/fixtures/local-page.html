@@ -59,6 +59,10 @@
       }
       .card strong { display: block; margin-bottom: 14px; font: 700 14px/1 system-ui, sans-serif; text-transform: uppercase; }
       .card p { margin: 0; font-size: 28px; line-height: 1.16; }
+      .missing-asset {
+        background-color: white;
+        background-image: url("/unavailable-page-asset.png");
+      }
       .rtl { direction: rtl; background: #d7ff43; }
       .cjk { background: #3155ff; color: white; }
       .mask {
@@ -85,7 +89,7 @@
     </header>
     <main>
       <section class="grid">
-        <article class="card"><strong>Geometry</strong><p>Measured in the browser, kept as layers.</p><div class="mask"></div></article>
+        <article class="card missing-asset"><strong>Geometry</strong><p>Measured in the browser, kept as layers.</p><div class="mask"></div></article>
         <article class="card rtl"><strong>RTL</strong><p>مرحبا بالعالم — تخطيط قابل للتحرير</p></article>
         <article class="card cjk"><strong>CJK</strong><p>页面结构、本地转换、可编辑画布。</p></article>
       </section>

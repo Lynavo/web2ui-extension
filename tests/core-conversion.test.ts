@@ -234,8 +234,13 @@ describe("capture to render plan", () => {
     expect(JSON.stringify(plan.assets)).not.toMatch(/https?:\/\//u);
   });
 
-  it("rejects a portable plan when a referenced asset is missing", () => {
+  it("keeps a portable plan usable when a declared page asset could not be fetched", () => {
     const capture = makeCapture();
+    capture.warnings.push({
+      code: "asset_fetch_failed",
+      nodeId: "n_missing",
+      count: 1,
+    });
     capture.root.children.push({
       id: "n_missing",
       type: "image",
@@ -248,8 +253,27 @@ describe("capture to render plan", () => {
       scaleMode: "fill",
     });
 
-    expect(() => convertCaptureToPortableRenderPlan(capture)).toThrow(
-      "portable render-plan cannot hydrate missing capture asset asset_missing",
+    const plan = convertCaptureToPortableRenderPlan(capture);
+    expect(plan.assets).toEqual([]);
+    expect(plan.root.children[1]).toMatchObject({
+      type: "RECTANGLE",
+      sourceNodeId: "n_missing",
+      fills: [
+        {
+          type: "SOLID",
+          color: { r: 0.93, g: 0.93, b: 0.94 },
+        },
+      ],
+    });
+    expect(plan.warnings).toEqual(
+      expect.arrayContaining([
+        capture.warnings[0],
+        expect.objectContaining({
+          code: "asset_fetch_failed",
+          nodeId: "n_missing",
+          detail: "image placeholder emitted",
+        }),
+      ]),
     );
   });
 

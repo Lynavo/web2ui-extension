@@ -117,6 +117,8 @@ The content runtime discovers assets declared by the page. The service worker ad
 only HTTP(S) URLs, omits credentials and referrer data, follows bounded time and byte limits, and
 returns bytes to the active capture. Inline SVG is checked before it enters a portable plan.
 These reads may contact the page's own origin or CDN; they never target a Web2UI service.
+If a declared asset is unavailable, conversion keeps the rest of the page usable: image nodes
+receive a neutral placeholder, missing paints are omitted, and the node-scoped warning is retained.
 
 ### Local persistence
 

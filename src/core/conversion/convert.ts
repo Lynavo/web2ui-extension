@@ -137,7 +137,6 @@ export function convertCaptureToPortableRenderPlan(
   capture: CaptureDocument,
   options: ConvertOptions = {},
 ): RenderPlan {
-  assertReferencedCaptureAssetsExist(capture);
   const plan = convertCaptureToRenderPlan(capture, options);
   if (plan.assets.length === 0) return plan;
 
@@ -164,31 +163,6 @@ function captureAssetDataUrl(asset: CaptureInlineAsset): `data:${string}` {
     return `data:${asset.mediaType};utf8,${encodeURIComponent(asset.data)}`;
   }
   throw new Error(`portable render-plan cannot encode non-data capture asset ${asset.assetId}`);
-}
-
-function assertReferencedCaptureAssetsExist(capture: CaptureDocument): void {
-  const captureAssets = new Map(capture.assets.map((asset) => [asset.assetId, asset]));
-  const referenced = new Set<string>();
-  collectReferencedAssetIds(capture.root, referenced);
-  for (const assetId of referenced) {
-    if (!captureAssets.has(assetId)) {
-      throw new Error(`portable render-plan cannot hydrate missing capture asset ${assetId}`);
-    }
-  }
-}
-
-function collectReferencedAssetIds(node: CaptureNode, ids: Set<string>): void {
-  if (node.type === "image" || node.type === "svg") {
-    if (node.assetId && node.assetMissing !== true) ids.add(node.assetId);
-  }
-  if (node.type === "element") {
-    for (const fill of node.fills) {
-      if (fill.type === "image") ids.add(fill.assetId);
-    }
-    for (const child of node.children) {
-      collectReferencedAssetIds(child, ids);
-    }
-  }
 }
 
 function decodeDataUri(data: string): Uint8Array | null {

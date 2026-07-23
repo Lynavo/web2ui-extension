@@ -286,4 +286,70 @@ describe("background runtime", () => {
     );
     expect(fetchSpy).not.toHaveBeenCalled();
   });
+
+  it("distinguishes same-document history updates from a replaced capture document", async () => {
+    const harness = chromeHarness();
+    vi.stubGlobal("chrome", harness.chromeMock);
+    vi.stubGlobal("indexedDB", new IDBFactory());
+    await import("../src/extension/background.js");
+
+    const listener = harness.runtimeListeners[0];
+    if (!listener) throw new Error("runtime listener missing");
+    const startResponse = vi.fn();
+    listener(
+      { type: "start-capture", mode: "full-page" },
+      { id: "extension-id" },
+      startResponse,
+    );
+    await vi.waitFor(() => {
+      expect(startResponse).toHaveBeenCalledWith({
+        ok: true,
+        state: expect.objectContaining({
+          status: "capturing",
+          documentId: "document_current",
+        }),
+      });
+    });
+
+    harness.chromeMock.scripting.executeScript.mockResolvedValueOnce([
+      { frameId: 0, documentId: "document_current" },
+    ]);
+    harness.tabUpdatedListeners[0]?.(7, {
+      status: "loading",
+      url: "https://fixture.invalid/page#section",
+    });
+    await vi.waitFor(() => {
+      expect(harness.chromeMock.scripting.executeScript).toHaveBeenCalledTimes(3);
+    });
+
+    const sameDocumentResponse = vi.fn();
+    listener({ type: "get-state" }, { id: "extension-id" }, sameDocumentResponse);
+    await vi.waitFor(() => {
+      expect(sameDocumentResponse).toHaveBeenCalledWith({
+        ok: true,
+        state: expect.objectContaining({
+          status: "capturing",
+          documentId: "document_current",
+        }),
+      });
+    });
+
+    harness.chromeMock.scripting.executeScript.mockResolvedValueOnce([
+      { frameId: 0, documentId: "document_replaced" },
+    ]);
+    harness.tabUpdatedListeners[0]?.(7, { status: "loading" });
+
+    const replacedDocumentResponse = vi.fn();
+    await vi.waitFor(() => {
+      listener({ type: "get-state" }, { id: "extension-id" }, replacedDocumentResponse);
+      expect(replacedDocumentResponse).toHaveBeenCalledWith({
+        ok: true,
+        state: {
+          status: "error",
+          code: "page-changed",
+          message: "The page changed during capture.",
+        },
+      });
+    });
+  });
 });

@@ -8,7 +8,10 @@ import {
   type BackgroundPlatform,
   type LocalPlanStore,
 } from "../src/extension/background-controller.js";
-import type { StoredRenderPlan } from "../src/extension/plan-store.js";
+import {
+  RenderPlanTooLargeError,
+  type StoredRenderPlan,
+} from "../src/extension/plan-store.js";
 
 function capture(): CaptureDocument {
   return {
@@ -107,6 +110,7 @@ function platform(overrides: Partial<BackgroundPlatform> = {}): BackgroundPlatfo
     nextRunId: () => "run_current",
     getActiveTab: vi.fn(async () => ({ id: 7, url: "https://fixture.invalid/page" })),
     measureViewport: vi.fn(async () => ({ width: 1280, height: 720, deviceScaleFactor: 1 })),
+    getCurrentDocumentId: vi.fn(async () => "document_current"),
     attachDebugger: vi.fn(async () => undefined),
     sendDebuggerCommand: vi.fn(async () => ({})),
     detachDebugger: vi.fn(async () => undefined),
@@ -306,4 +310,77 @@ describe("BackgroundController", () => {
     expect(controller.getState()).toMatchObject({ status: "error", code: "permission-denied" });
     expect(target.detachDebugger).not.toHaveBeenCalled();
   });
+
+  it("reports a conversion exception without claiming the page is too complex", async () => {
+    const controller = new BackgroundController({
+      platform: platform(),
+      store: new MemoryPlanStore(),
+      convert: () => {
+        throw new Error("unsupported capture structure");
+      },
+      clipboard: () => ({ svg: "<svg/>", html: "<svg/>", text: "<svg/>" }),
+    });
+
+    await completeCapture(controller);
+
+    expect(controller.getState()).toEqual({
+      status: "error",
+      code: "conversion-failed",
+      message: "A page structure could not be converted locally.",
+    });
+  });
+
+  it("reports local storage failures separately from conversion failures", async () => {
+    const store = new MemoryPlanStore();
+    store.put.mockRejectedValueOnce(new Error("IndexedDB transaction aborted"));
+    const controller = new BackgroundController({
+      platform: platform(),
+      store,
+      convert: () => plan(),
+      clipboard: () => ({ svg: "<svg/>", html: "<svg/>", text: "<svg/>" }),
+    });
+
+    await completeCapture(controller);
+
+    expect(controller.getState()).toEqual({
+      status: "error",
+      code: "storage-failed",
+      message: "Chrome could not save the converted result locally.",
+    });
+  });
+
+  it("reports the measured result size when it exceeds the local limit", async () => {
+    const store = new MemoryPlanStore();
+    store.put.mockRejectedValueOnce(
+      new RenderPlanTooLargeError(28 * 1024 * 1024, 25 * 1024 * 1024),
+    );
+    const controller = new BackgroundController({
+      platform: platform(),
+      store,
+      convert: () => plan(),
+      clipboard: () => ({ svg: "<svg/>", html: "<svg/>", text: "<svg/>" }),
+    });
+
+    await completeCapture(controller);
+
+    expect(controller.getState()).toEqual({
+      status: "error",
+      code: "plan-too-large",
+      message: "The converted result is 28.0 MB, above the 25.0 MB local limit.",
+    });
+  });
 });
+
+async function completeCapture(controller: BackgroundController): Promise<void> {
+  await controller.startCapture("visible-area", DEFAULT_CAPTURE_OPTIONS);
+  await controller.handleContentMessage(
+    {
+      type: "capture-done",
+      runId: "run_current",
+      tabId: 7,
+      documentId: "document_current",
+      document: capture(),
+    },
+    { tabId: 7, documentId: "document_current" },
+  );
+}
