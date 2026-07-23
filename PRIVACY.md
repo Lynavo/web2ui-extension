@@ -32,6 +32,14 @@ The extension does not use telemetry, analytics, advertising identifiers, crash 
 remote feature flags, or remotely hosted executable code. The maintainers do not sell captured
 content or use it for advertising.
 
+## Commercial edition link
+
+The popup contains an optional link to the separate Web2UI Cloud website and may repeat that link
+when local conversion reports a fidelity approximation or complexity-related failure. The site is
+opened only after the user clicks the link. No captured page content, RenderPlan, clipboard
+payload, account identifier, or conversion state is transferred by the extension. The destination
+receives the ordinary request metadata sent by Chrome and is governed by its own privacy policy.
+
 ## Clipboard and Figma
 
 The extension writes the result to the system clipboard only after the user clicks **Copy for

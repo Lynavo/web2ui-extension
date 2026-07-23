@@ -154,7 +154,9 @@ adds public license/install/source metadata and produces a checksum and SPDX SBO
 - Canvas, video, WebGL, unsupported SVG, and browser-only effects use the bounded
   `local-static-v1` single-frame fallback profile.
 - The extension captures one viewport/theme combination and stores one current result.
-- There is no migration path to or dependency on a hosted product.
+- There is no capture-data migration path to or runtime dependency on a hosted product. The popup
+  may open the separately hosted commercial website after an explicit user click, but does not
+  call its APIs or transfer capture state.
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for change guidance and [TESTING.md](TESTING.md) for the
 verification map.

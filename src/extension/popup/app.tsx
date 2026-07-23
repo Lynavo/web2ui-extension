@@ -12,6 +12,10 @@ import {
   type ViewportChoice,
 } from "./capture-options.js";
 import { writeFigmaClipboardPayload } from "./clipboard.js";
+import {
+  CommercialEditionLink,
+  canSuggestManagedRecovery,
+} from "./commercial-edition.js";
 
 type CopyStatus = "idle" | "copying" | "copied" | "error";
 
@@ -40,6 +44,11 @@ export function PopupView(props: PopupViewProps) {
           <img className="brand-logo" src="icons/icon-48.png" alt="" draggable={false} />
           <span className="brand-name">Web2UI</span>
         </div>
+        <CommercialEditionLink
+          className="commercial-header-link"
+          label="Web2UI Cloud"
+          ariaLabel="Open the commercial Web2UI Cloud edition in a new tab"
+        />
       </header>
 
       {ready ? (
@@ -64,9 +73,16 @@ function CapturePanel(props: PopupViewProps) {
       {error ? (
         <div className="error-banner" role="alert">
           <span className="error-dot">!</span>
-          <div>
+          <div className="error-content">
             <div className="error-title">Capture failed</div>
             <div className="error-detail">{error.message}</div>
+            {canSuggestManagedRecovery(error.code) ? (
+              <CommercialEditionLink
+                className="error-commercial-link"
+                label="Try managed capture in Web2UI Cloud"
+                ariaLabel="Try managed capture in the commercial Web2UI Cloud edition"
+              />
+            ) : null}
           </div>
         </div>
       ) : null}
@@ -278,7 +294,14 @@ function ReadyPanel(props: PopupViewProps) {
       </section>
 
       {warningCount > 0 ? (
-        <p className="warning-note">{warningCount} visual detail{warningCount === 1 ? "" : "s"} used a safe approximation.</p>
+        <div className="warning-note" role="note">
+          <span>{warningCount} visual detail{warningCount === 1 ? "" : "s"} used a safe approximation.</span>
+          <CommercialEditionLink
+            className="warning-commercial-link"
+            label="Higher fidelity with Web2UI Cloud"
+            ariaLabel="Explore higher-fidelity managed capture in the commercial Web2UI Cloud edition"
+          />
+        </div>
       ) : null}
 
       <button

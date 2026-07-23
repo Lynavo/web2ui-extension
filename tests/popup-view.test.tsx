@@ -50,6 +50,10 @@ describe("PopupView", () => {
     expect(markup).toContain("Capture visible area");
     expect(markup).toContain("Browser viewport");
     expect(markup).toContain("Browser theme");
+    expect(markup).toContain("Web2UI Cloud");
+    expect(markup).toContain('href="https://web2ui.lynavo.io/"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).toContain('rel="noreferrer"');
     expect(markup).not.toMatch(/Selection|Send to Figma|Sign in|credits?/iu);
   });
 
@@ -108,9 +112,27 @@ describe("PopupView", () => {
     expect(markup).toContain("Capture another page");
     expect(markup).toContain("Clear local data");
     expect(markup).toContain("Stored locally for up to 24 hours");
+    expect(markup).toContain("2 visual details used a safe approximation.");
+    expect(markup).toContain("Higher fidelity with Web2UI Cloud");
     expect(markup).toMatch(/class="[^"]*\bresult-view\b[^"]*"/u);
     expect(markup).toContain('class="result-copy-card"');
     expect(markup).toContain('class="result-card-arrow"');
     expect(markup).not.toMatch(/upload|account|plugin/iu);
+  });
+
+  it("suggests managed capture only for local complexity failures", () => {
+    const complexMarkup = render({
+      status: "error",
+      code: "plan-too-large",
+      message: "The page was too complex to convert locally.",
+    });
+    const permissionMarkup = render({
+      status: "error",
+      code: "permission-denied",
+      message: "Chrome denied access to this page.",
+    });
+
+    expect(complexMarkup).toContain("Try managed capture in Web2UI Cloud");
+    expect(permissionMarkup).not.toContain("Try managed capture in Web2UI Cloud");
   });
 });

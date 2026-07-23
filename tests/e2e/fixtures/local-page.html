@@ -35,6 +35,18 @@
         background: linear-gradient(160deg, #ff5f40 0 48%, #172033 48% 100%);
         box-shadow: 22px 24px 0 rgba(23, 32, 51, .18);
       }
+      .warning-sample {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        margin-top: 12px;
+        place-items: center;
+        background: rgba(255, 255, 255, .7);
+        color: #172033;
+        font: 700 10px/1 system-ui, sans-serif;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+      }
       main { padding: 88px 80px; }
       .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
       .card {
@@ -67,6 +79,7 @@
       <div>
         <h1>Local pages, editable ideas.</h1>
         <p class="lede">A deterministic fixture for browser-only capture, conversion, and clipboard rendering.</p>
+        <span class="warning-sample">UI</span>
       </div>
       <div class="poster" aria-label="Abstract poster"></div>
     </header>

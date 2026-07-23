@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { copyFile, mkdir, rm, symlink, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 
@@ -19,6 +19,23 @@ test("accepts the local-only source and extension bundle", () => {
 
   const result = verify("dist");
   assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+});
+
+test("allows only an explicit user-directed commercial website link in the popup", async () => {
+  const component = await readFile(
+    new URL("../src/extension/popup/commercial-edition.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.match(component, /href=\{COMMERCIAL_EDITION_URL\}/u);
+  assert.match(component, /target="_blank"/u);
+  assert.match(component, /rel="noreferrer"/u);
+  assert.doesNotMatch(component, /\b(?:fetch\s*\(|XMLHttpRequest|WebSocket|EventSource)\b/u);
+
+  const build = spawnSync("pnpm", ["run", "build"], { cwd: root, encoding: "utf8" });
+  assert.equal(build.status, 0, `${build.stdout}\n${build.stderr}`);
+  const popup = await readFile(new URL("../dist/popup.js", import.meta.url), "utf8");
+  assert.equal(popup.split("https://web2ui.lynavo.io/").length - 1, 1);
+  assert.doesNotMatch(popup, /\b(?:fetch\s*\(|XMLHttpRequest|WebSocket|EventSource)\b/u);
 });
 
 test("rejects server control-plane code from a release bundle", async () => {

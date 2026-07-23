@@ -6,6 +6,11 @@ const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const target = path.resolve(root, process.argv[2] ?? "dist");
 
 const allowedRuntimeDependencies = new Set(["react", "react-dom"]);
+const commercialWebsiteUrl = "https://web2ui.lynavo.io/";
+const commercialWebsiteLinkFiles = new Set([
+  "src/extension/popup/commercial-edition.tsx",
+  "dist/popup.js",
+]);
 
 const forbiddenSourcePatterns = [
   /web2ui\.lynavo\.io/iu,
@@ -71,19 +76,34 @@ async function assertNoServerBoundary(directory) {
     }
     if (!/\.(?:css|html|js|json|md|mjs|svg|ts|tsx|txt|xml)$/u.test(file)) continue;
     const contents = await readFile(file, "utf8").catch(() => "");
+    const relative = path.relative(root, file).split(path.sep).join("/");
     if (/sourceMappingURL|sourceURL|sourcesContent|webpack:\/\//u.test(contents)) {
       offenders.push(`${path.relative(root, file)} (source map metadata)`);
       continue;
     }
-    const match = forbiddenSourcePatterns.find((pattern) => pattern.test(contents));
+    const boundaryContents = stripReviewedCommercialWebsiteLink(relative, contents);
+    const match = forbiddenSourcePatterns.find((pattern) => pattern.test(boundaryContents));
     const releaseMatch = forbiddenReleasePatterns.find((pattern) => pattern.test(contents));
-    if (match || releaseMatch) {
-      offenders.push(`${path.relative(root, file)} (${(match ?? releaseMatch).source})`);
+    const popupNetworkMatch =
+      relative === "dist/popup.js"
+        ? /\b(?:fetch\s*\(|XMLHttpRequest|WebSocket|EventSource)\b/u.exec(contents)
+        : null;
+    if (match || releaseMatch || popupNetworkMatch) {
+      offenders.push(
+        `${path.relative(root, file)} (${(match ?? releaseMatch)?.source ?? "popup network primitive"})`,
+      );
     }
   }
   if (offenders.length > 0) {
     throw new Error(`server boundary violation:\n${offenders.join("\n")}`);
   }
+}
+
+function stripReviewedCommercialWebsiteLink(relative, contents) {
+  if (!commercialWebsiteLinkFiles.has(relative)) return contents;
+  const occurrences = contents.split(commercialWebsiteUrl).length - 1;
+  if (occurrences !== 1) return contents;
+  return contents.replace(commercialWebsiteUrl, "");
 }
 
 async function assertManifest(directory) {

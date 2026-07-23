@@ -96,6 +96,19 @@ describe.sequential("real MV3 local Copy for Figma flow", () => {
         state: "visible",
         timeout: 30_000,
       });
+      const readyState = await popup.evaluate(async () => {
+        return chrome.runtime.sendMessage({ type: "get-state" }) as Promise<{
+          ok: true;
+          state: { status: string; warningCount?: number };
+        }>;
+      });
+      expect(readyState.state.warningCount).toBeGreaterThan(0);
+      const fidelityLink = popup.getByRole("link", {
+        name: "Explore higher-fidelity managed capture in the commercial Web2UI Cloud edition",
+      });
+      await fidelityLink.waitFor({ state: "visible", timeout: 5_000 });
+      expect(await fidelityLink.getAttribute("href")).toBe("https://web2ui.lynavo.io/");
+      expect(await fidelityLink.getAttribute("target")).toBe("_blank");
       await popup.screenshot({ path: path.join(artifacts, "visible-ready-popup.png") });
       await popup.getByRole("button", { name: "Copy for Figma" }).click();
       await popup.getByRole("button", { name: "Copied — paste in Figma" }).waitFor({
