@@ -49,9 +49,9 @@ test("packages a verified Chrome extension ZIP with its AGPL license and checksu
   const sourceNotice = new TextDecoder().decode(entries["SOURCE_CODE.txt"]);
   const installGuide = new TextDecoder().decode(entries["INSTALL.md"]);
   assert.ok(sourceNotice.includes(`Web2UI Extension ${version}`));
-  assert.ok(sourceNotice.includes(`github.com/Lynavo/web2ui-extension/tree/v${version}`));
+  assert.ok(sourceNotice.includes(`github.com/Lynavo/web2ui/tree/v${version}`));
   assert.ok(
-    sourceNotice.includes(`github.com/Lynavo/web2ui-extension/releases/tag/v${version}`),
+    sourceNotice.includes(`github.com/Lynavo/web2ui/releases/tag/v${version}`),
   );
   assert.match(sourceNotice, /pnpm install --frozen-lockfile/u);
   assert.match(sourceNotice, /pnpm validate/u);
@@ -65,7 +65,7 @@ test("packages a verified Chrome extension ZIP with its AGPL license and checksu
   assert.equal(spdx.spdxVersion, "SPDX-2.3");
   assert.equal(
     spdx.documentNamespace,
-    `https://github.com/Lynavo/web2ui-extension/releases/tag/v${version}/sbom`,
+    `https://github.com/Lynavo/web2ui/releases/tag/v${version}/sbom`,
   );
   assert.deepEqual(
     spdx.packages.map(({ name }) => name).sort(),

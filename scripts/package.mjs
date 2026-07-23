@@ -63,11 +63,11 @@ function sourceCodeNotice(version) {
 
 The complete corresponding source for this archive is the release tag:
 
-  https://github.com/Lynavo/web2ui-extension/tree/v${version}
+  https://github.com/Lynavo/web2ui/tree/v${version}
 
 The release page, archive checksum, and source archive are published at:
 
-  https://github.com/Lynavo/web2ui-extension/releases/tag/v${version}
+  https://github.com/Lynavo/web2ui/releases/tag/v${version}
 
 The tagged tree includes the extension and browser core source, build and verification
 scripts, package.json, and pnpm-lock.yaml.

@@ -7,7 +7,7 @@ Chrome 106 or newer is required.
 ## Download and verify
 
 Download both files for the same version from
-[GitHub Releases](https://github.com/Lynavo/web2ui-extension/releases):
+[GitHub Releases](https://github.com/Lynavo/web2ui/releases):
 
 - `web2ui-extension-<version>.zip`
 - `web2ui-extension-<version>.zip.sha256`

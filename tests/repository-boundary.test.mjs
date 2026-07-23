@@ -13,9 +13,9 @@ test("declares a standalone AGPL Chrome extension repository", async () => {
   assert.equal(packageJson.name, "web2ui-extension");
   assert.equal(packageJson.private, true);
   assert.equal(packageJson.type, "module");
-  assert.equal(packageJson.repository?.url, "git+https://github.com/Lynavo/web2ui-extension.git");
-  assert.equal(packageJson.homepage, "https://github.com/Lynavo/web2ui-extension#readme");
-  assert.equal(packageJson.bugs?.url, "https://github.com/Lynavo/web2ui-extension/issues");
+  assert.equal(packageJson.repository?.url, "git+https://github.com/Lynavo/web2ui.git");
+  assert.equal(packageJson.homepage, "https://github.com/Lynavo/web2ui#readme");
+  assert.equal(packageJson.bugs?.url, "https://github.com/Lynavo/web2ui/issues");
   assert.equal(manifest.manifest_version, 3);
   assert.match(license, /GNU AFFERO GENERAL PUBLIC LICENSE/);
   assert.match(license, /Version 3, 19 November 2007/);

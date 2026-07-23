@@ -4,6 +4,9 @@ All user-visible changes to Web2UI — Copy for Figma are recorded here.
 
 ## Unreleased
 
+- Moved the public source, issue, security, and release links to `Lynavo/web2ui` after the
+  repository rename.
+
 ## 0.1.1 — 2026-07-23
 
 - Kept captures usable when a page-declared image, SVG, or CSS background cannot be recovered:

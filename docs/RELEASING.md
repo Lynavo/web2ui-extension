@@ -64,7 +64,7 @@ the workflow-built artifacts are the release source of truth.
    version="$(node --input-type=module -e \
      "import packageJson from './package.json' with { type: 'json' }; process.stdout.write(packageJson.version)")"
    gh attestation verify "web2ui-extension-${version}.zip" \
-     --repo Lynavo/web2ui-extension
+     --repo Lynavo/web2ui
    ```
 
 5. Extract the ZIP and load its directory through `chrome://extensions`.

@@ -7,11 +7,11 @@
   "author": "Lynavo",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lynavo/web2ui-extension.git"
+    "url": "git+https://github.com/Lynavo/web2ui.git"
   },
-  "homepage": "https://github.com/Lynavo/web2ui-extension#readme",
+  "homepage": "https://github.com/Lynavo/web2ui#readme",
   "bugs": {
-    "url": "https://github.com/Lynavo/web2ui-extension/issues"
+    "url": "https://github.com/Lynavo/web2ui/issues"
   },
   "keywords": [
     "chrome-extension",

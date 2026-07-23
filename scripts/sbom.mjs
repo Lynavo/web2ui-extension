@@ -55,7 +55,7 @@ export async function writeProductionSbom(options = {}) {
     dataLicense: "CC0-1.0",
     SPDXID: "SPDXRef-DOCUMENT",
     name: `web2ui-extension-${rootPackage.version}`,
-    documentNamespace: `https://github.com/Lynavo/web2ui-extension/releases/tag/v${rootPackage.version}/sbom`,
+    documentNamespace: `https://github.com/Lynavo/web2ui/releases/tag/v${rootPackage.version}/sbom`,
     creationInfo: {
       created,
       creators: ["Organization: Lynavo", "Tool: web2ui-production-sbom"],

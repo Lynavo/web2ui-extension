@@ -11,9 +11,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Lynavo/web2ui-extension/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Lynavo/web2ui-extension/ci.yml?branch=main&label=CI&style=flat-square" alt="CI status"></a>
-  <a href="https://github.com/Lynavo/web2ui-extension/actions/workflows/codeql.yml"><img src="https://img.shields.io/github/actions/workflow/status/Lynavo/web2ui-extension/codeql.yml?branch=main&label=CodeQL&style=flat-square" alt="CodeQL status"></a>
-  <a href="https://github.com/Lynavo/web2ui-extension/releases"><img src="https://img.shields.io/github/v/release/Lynavo/web2ui-extension?style=flat-square" alt="Latest release"></a>
+  <a href="https://github.com/Lynavo/web2ui/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Lynavo/web2ui/ci.yml?branch=main&label=CI&style=flat-square" alt="CI status"></a>
+  <a href="https://github.com/Lynavo/web2ui/actions/workflows/codeql.yml"><img src="https://img.shields.io/github/actions/workflow/status/Lynavo/web2ui/codeql.yml?branch=main&label=CodeQL&style=flat-square" alt="CodeQL status"></a>
+  <a href="https://github.com/Lynavo/web2ui/releases"><img src="https://img.shields.io/github/v/release/Lynavo/web2ui?style=flat-square" alt="Latest release"></a>
   <img src="https://img.shields.io/badge/Node.js-%3E%3D%2024-339933?style=flat-square&logo=node.js" alt="Node.js 24 or newer">
   <img src="https://img.shields.io/badge/Chrome-%3E%3D%20106-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome 106 or newer">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0--only-4B32C3?style=flat-square" alt="AGPL-3.0-only license"></a>
@@ -137,7 +137,7 @@ capture, create an account, or send conversion data to the hosted product.
 
 ## Install
 
-Web2UI is distributed through [GitHub Releases](https://github.com/Lynavo/web2ui-extension/releases)
+Web2UI is distributed through [GitHub Releases](https://github.com/Lynavo/web2ui/releases)
 as an unpacked extension package. It is not installed through the Chrome Web Store.
 
 ### Requirements
@@ -339,7 +339,7 @@ minimal synthetic page instead of attaching private captured content.
 Requirements: Node.js 24 or newer and pnpm 10.
 
 ```bash
-git clone https://github.com/Lynavo/web2ui-extension.git
+git clone https://github.com/Lynavo/web2ui.git
 cd web2ui-extension
 pnpm install --frozen-lockfile
 pnpm validate
@@ -417,10 +417,10 @@ See [CHANGELOG.md](CHANGELOG.md) for user-visible changes and
 Contributions are welcome when they preserve the local-only product and security boundary. Before
 starting a large behavioral or permission change, open an issue so its scope can be discussed.
 
-- [Browse issues](https://github.com/Lynavo/web2ui-extension/issues)
-- [Report a bug](https://github.com/Lynavo/web2ui-extension/issues/new?template=bug_report.yml)
-- [Request a feature](https://github.com/Lynavo/web2ui-extension/issues/new?template=feature_request.yml)
-- [Report a vulnerability privately](https://github.com/Lynavo/web2ui-extension/security/advisories/new)
+- [Browse issues](https://github.com/Lynavo/web2ui/issues)
+- [Report a bug](https://github.com/Lynavo/web2ui/issues/new?template=bug_report.yml)
+- [Request a feature](https://github.com/Lynavo/web2ui/issues/new?template=feature_request.yml)
+- [Report a vulnerability privately](https://github.com/Lynavo/web2ui/security/advisories/new)
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), and
 [MAINTAINERS.md](MAINTAINERS.md) before contributing. Contributions use an
