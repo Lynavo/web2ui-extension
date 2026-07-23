@@ -83,7 +83,11 @@ describe("PopupView", () => {
     expect(css).toMatch(/\.mode-row\s*\{[^}]*gap:\s*10px;[^}]*height:\s*120px;/su);
     expect(css).toMatch(/\.mode-primary\s*\{[^}]*flex:\s*4;/su);
     expect(css).toMatch(/\.mode-secondary\s*\{[^}]*flex:\s*3;/su);
-    expect(css).toMatch(/\.result-copy-card\s*\{[^}]*min-height:\s*204px;[^}]*background:\s*var\(--surface\);/su);
+    expect(css).toMatch(
+      /\.result-copy-card\s*\{[^}]*min-height:\s*88px;[^}]*grid-template-columns:\s*44px minmax\(0, 1fr\) 32px;[^}]*border-radius:\s*22px;/su,
+    );
+    expect(css).toMatch(/\.result-card-arrow\s*\{[^}]*width:\s*32px;[^}]*height:\s*32px;/su);
+    expect(css).not.toContain("min-height: 204px");
     expect(css).not.toContain(".mode-viewport");
     expect(css).not.toMatch(/--paper|--signal|Iowan Old Style|Palatino/u);
   });
@@ -106,6 +110,7 @@ describe("PopupView", () => {
     expect(markup).toContain("Stored locally for up to 24 hours");
     expect(markup).toMatch(/class="[^"]*\bresult-view\b[^"]*"/u);
     expect(markup).toContain('class="result-copy-card"');
+    expect(markup).toContain('class="result-card-arrow"');
     expect(markup).not.toMatch(/upload|account|plugin/iu);
   });
 });
