@@ -388,7 +388,7 @@ export function App() {
   const [theme, setTheme] = useState<ThemeChoice>("browser");
   const [browserViewportWidth, setBrowserViewportWidth] = useState<number | null>(null);
   const [copyStatus, setCopyStatus] = useState<CopyStatus>("idle");
-  const version = extensionApi?.runtime.getManifest().version ?? "0.1.1";
+  const version = extensionApi?.runtime.getManifest().version ?? "0.1.2";
 
   const refresh = useCallback(async () => {
     if (!extensionApi) return;
